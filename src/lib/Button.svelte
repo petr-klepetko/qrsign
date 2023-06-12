@@ -31,4 +31,9 @@
     color: rgb(239, 239, 239);
     border-color: rgb(239, 239, 239);
   }
+  @media print {
+    button {
+      display: none;
+    }
+  }
 </style>

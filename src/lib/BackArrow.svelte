@@ -37,4 +37,10 @@
   img {
     margin-right: 10px;
   }
+
+  @media print {
+    .arrow {
+      display: none;
+    }
+  }
 </style>

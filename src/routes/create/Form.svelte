@@ -11,6 +11,7 @@
   } from "$lib/DigitalSignature.svelte";
 
   let debug = false;
+  let editMode = true;
 
   console.log(sig);
 
@@ -85,7 +86,7 @@
     id: 1,
     header: "Potvrzení o studiu",
     fields: [
-      { id: 1, name: "Jméno", value: "Pe" },
+      { id: 1, name: "Jméno", value: "" },
       { id: 2, name: "Škola", value: "" },
       { id: 3, name: "Datum od", value: "" },
       { id: 4, name: "Datum do", value: "" },
@@ -108,45 +109,73 @@
 <div class="form-container">
   <div class="form">
     <h3>{currentTemplate.header}</h3>
-    <p>
-      Student jménem <input
-        bind:value={currentTemplate.fields[0].value}
-        on:change={() => {
-          //console.log(currentTemplate.fields[0].value);
-          reloadQRcode();
-        }}
-        placeholder="Jméno"
-      />
-      studuje na škole
-      <input
-        placeholder="Škola"
-        bind:value={currentTemplate.fields[1].value}
-        on:change={() => {
-          //console.log(currentTemplate.fields[0].value);
-          reloadQRcode();
-        }}
-      />
-      od
-      <input
-        type="date"
-        placeholder="Datum od"
-        bind:value={currentTemplate.fields[2].value}
-        on:change={() => {
-          //console.log(currentTemplate.fields[0].value);
-          reloadQRcode();
-        }}
-      />
-      do
-      <input
-        type="date"
-        placeholder="Datum do"
-        bind:value={currentTemplate.fields[3].value}
-        on:input={() => {
-          //console.log(currentTemplate.fields[0].value);
-          reloadQRcode();
-        }}
-      />
-    </p>
+    {#if editMode}
+      <p>
+        Student jménem <input
+          bind:value={currentTemplate.fields[0].value}
+          on:change={() => {
+            //console.log(currentTemplate.fields[0].value);
+            reloadQRcode();
+          }}
+          placeholder="Jméno"
+        />
+        studuje na škole
+        <input
+          placeholder="Škola"
+          bind:value={currentTemplate.fields[1].value}
+          on:change={() => {
+            //console.log(currentTemplate.fields[0].value);
+            reloadQRcode();
+          }}
+        />
+        od
+        <input
+          type="date"
+          placeholder="Datum od"
+          bind:value={currentTemplate.fields[2].value}
+          on:change={() => {
+            //console.log(currentTemplate.fields[0].value);
+            reloadQRcode();
+          }}
+        />
+        do
+        <input
+          type="date"
+          placeholder="Datum do"
+          bind:value={currentTemplate.fields[3].value}
+          on:input={() => {
+            //console.log(currentTemplate.fields[0].value);
+            reloadQRcode();
+          }}
+        />
+      </p>
+    {:else}
+      <p>
+        Student jménem <strong
+          >{currentTemplate.fields[0].value != ""
+            ? currentTemplate.fields[0].value
+            : `[${currentTemplate.fields[0].name}]`}</strong
+        >
+        studuje na škole
+        <strong
+          >{currentTemplate.fields[1].value != ""
+            ? currentTemplate.fields[1].value
+            : `[${currentTemplate.fields[1].name}]`}</strong
+        >
+        od
+        <strong
+          >{currentTemplate.fields[2].value != ""
+            ? currentTemplate.fields[2].value
+            : `[${currentTemplate.fields[2].name}]`}</strong
+        >
+        do
+        <strong
+          >{currentTemplate.fields[3].value != ""
+            ? currentTemplate.fields[3].value
+            : `[${currentTemplate.fields[3].name}]`}</strong
+        >
+      </p>
+    {/if}
     <div class="qr-code" id="qr-code">
       <!-- <svelte:component this={QRcomponent} url={"https://github.com/"} /> -->
       <DigitalSignature />
@@ -156,7 +185,12 @@
       <!-- <img src="/src/img/ahoj_kod.png" alt="qrCode" /> -->
     </div>
   </div>
-  <Button>Save</Button>
+  {#if editMode}
+    <Button on:click={() => (editMode = false)}>Save</Button>
+  {:else}
+    <Button on:click={() => window.print()}>Print</Button>
+    <Button on:click={() => (editMode = true)}>Back</Button>
+  {/if}
 </div>
 {#if debug}
   <Center>
@@ -195,6 +229,41 @@
     justify-content: left;
     margin: 0;
     padding: 0;
+    padding-top: 3px;
     /* background-color: pink; */
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  @media print {
+    .form {
+      width: 21cm;
+      min-height: 29.7cm;
+      padding: 2cm;
+      margin: 1cm auto;
+      background: white;
+      border: initial;
+      border-radius: initial;
+      page-break-after: always;
+    }
+
+    .form-container {
+      margin: 0;
+      padding: 0;
+    }
+
+    .qr-code {
+      width: 100%;
+    }
+
+    h3 {
+      font-size: 28px;
+    }
+
+    * {
+      font-size: 15px;
+    }
   }
 </style>

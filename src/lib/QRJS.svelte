@@ -25,11 +25,15 @@
       "https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js";
     document.head.append(script);
 
+    let availableParentWidth =
+      document.getElementById("qrcode").parentElement.clientWidth - 50;
+    console.log("parent width: ", availableParentWidth);
+
     script.onload = function () {
       qrcode = new QRCode("qrcode", {
         text: codeValue,
-        width: squareSize,
-        height: squareSize,
+        width: availableParentWidth,
+        height: availableParentWidth,
         colorDark: "#000000",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H,

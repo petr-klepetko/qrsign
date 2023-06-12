@@ -74,4 +74,35 @@
     text-decoration: none;
     color: inherit;
   }
+
+  @media print {
+    #page-container {
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      /* margin: 10px 40px; */
+      margin: 0;
+      padding: 10px;
+    }
+    header {
+      width: 100%;
+      height: 60px;
+      text-align: center;
+      border-bottom: rgba(0, 0, 0, 0.199) solid 1px;
+    }
+    header {
+      display: none;
+    }
+    footer {
+      display: none;
+    }
+    .main {
+      display: initial;
+    }
+  }
 </style>
