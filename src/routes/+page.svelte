@@ -17,7 +17,7 @@
   </a>
   <div id="textOr">or</div>
 
-  <Button>Create</Button>
+  <a href="/create"><Button>Create</Button></a>
 </Center>
 
 <!-- </div> -->

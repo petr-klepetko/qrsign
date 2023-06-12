@@ -9,99 +9,118 @@
   import Spacer from "$lib/Spacer.svelte";
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
-  import { Html5QrcodeScanner } from "html5-qrcode";
-  import { Html5Qrcode } from "html5-qrcode";
+  import { Html5QrcodeScanner, Html5Qrcode } from "html5-qrcode";
   import { Jumper } from "svelte-loading-spinners";
+  import { openModal } from "svelte-modals";
+  import Modal from "$lib/Modal.svelte";
 
   const dispatch = createEventDispatcher();
 
-  let uploadedImage, fileinput;
-
-  let qrCodeValue;
+  let uploadedImage, fileinput, qrCodeValue;
 
   let scanningIsLoaded = false;
 
+  //* Creating empty functions so they are always defined. */
   let onFileSelected = () => null;
   let html5QrCode = () => null;
 
+  const scanOnSuccess = (decodedText) => {
+    qrCodeValue = decodedText;
+    console.log(qrCodeValue);
+  };
+
+  const scanOnError = (err) => {
+    console.log(`Error scanning file. Reason: ${err ?? "No error provided. "}`);
+  };
+
   const fileUploadSetup = () => {
     onFileSelected = (e) => {
-      uploadedImage = null;
+      let reader = new FileReader();
       let image = e.target.files[0];
 
-      let reader = new FileReader();
+      uploadedImage = null;
+
       reader.readAsDataURL(image);
       reader.onload = (e) => {
         uploadedImage = e.target.result;
       };
 
-      html5QrCode
-        .scanFile(image, true)
-        .then((decodedText) => {
-          // success, use decodedText
-          qrCodeValue = decodedText;
-          console.log(qrCodeValue);
-        })
-        .catch((err) => {
-          // failure, handle it.
-          console.log(`Error scanning file. Reason: ${err}`);
-        });
+      html5QrCode.scanFile(image, true).then(scanOnSuccess).catch(scanOnError);
     };
+  };
+
+  const liveScanOnSuccess = (decodedText, decodedResult) => {
+    scanningIsLoaded = true;
+
+    console.log("decodedText: ", decodedText);
+    console.log("decodedResult", decodedResult);
+    html5QrCode
+      .stop()
+      .then((ignore) => {
+        console.log("Stopping the scanning. ", ignore);
+      })
+      .catch((err) => {
+        console.log("error while stopping: ", err ?? "No error info");
+      });
+    qrCodeValue = decodedText;
+  };
+
+  const liveScanOnError = (errorMessage) => {
+    console.log("I tried, but saw no code. ");
+    if (!scanningIsLoaded) {
+      scanningIsLoaded = true;
+    }
   };
 
   const html5QrCodeSetup = () => {
     html5QrCode = new Html5Qrcode(/* element id */ "reader");
-
     let cameraId;
 
     Html5Qrcode.getCameras()
       .then((devices) => {
-        if (devices && devices.length) {
+        if (devices && devices.length && !qrCodeValue) {
           cameraId = devices[0].id;
 
-          if (!qrCodeValue) {
-            html5QrCode
-              .start(
-                cameraId,
-                {
-                  fps: 10, // Optional, frame per seconds for qr code scanning
-                  qrbox: { width: 250, height: 250 }, // Optional, if you want bounded box UI
-                },
-                (decodedText, decodedResult) => {
-                  scanningIsLoaded = true;
-
-                  console.log("decodedText: ", decodedText);
-                  console.log("decodedResult", decodedResult);
-                  html5QrCode
-                    .stop()
-                    .then((ignore) => {
-                      console.log("Stopping the scanning. ", ignore);
-                    })
-                    .catch((err) => {
-                      console.log("error while stopping: ", err);
-                    });
-                  qrCodeValue = decodedText;
-                },
-                (errorMessage) => {
-                  console.log("I tried, but saw no code");
-                  if (!scanningIsLoaded) {
-                    scanningIsLoaded = true;
-                  }
-                }
-              )
-              .catch((err) => {
-                console.log(err);
+          html5QrCode
+            .start(
+              cameraId,
+              {
+                fps: 10, // Optional, frame per seconds for qr code scanning
+                qrbox: { width: 250, height: 250 }, // Optional, if you want bounded box UI
+              },
+              liveScanOnSuccess,
+              liveScanOnError
+            )
+            .catch((err) => {
+              console.log(
+                "Error on starting the camera: ",
+                err ?? "No error info"
+              );
+              openModal(Modal, {
+                title: "Error while starting the camera",
+                message: err ?? "No error info",
               });
-          }
+            });
         }
       })
       .catch((err) => {
-        console.log("error while getting the cameras: ", err);
+        console.log(
+          "error while getting the cameras: ",
+          err ?? "No error info"
+        );
+        openModal(Modal, {
+          title: "Error while getting the cameras",
+          message: err ?? "No error info",
+        });
       });
   };
 
   onMount(() => {
-    console.log("this device is " + (Device.isMobile ? "" : "not") + " mobile");
+    // console.log("this device is " + (Device.isMobile ? "" : "not") + " mobile");
+    // openModal(Modal, {
+    //   title: "Device type: ",
+    //   message: "This device is " + (Device.isMobile ? "" : "not") + " mobile",
+    // });
     fileUploadSetup();
     html5QrCodeSetup();
   });
@@ -170,11 +189,11 @@
       html5QrCode
         .stop()
         .then((ignore) => {
-          console.log("Stopping the scanning. ", ignore);
+          console.log("Stopping the scanning. ", ignore ?? "");
           onFileSelected(e);
         })
         .catch((err) => {
-          console.log("error while stopping: ", err);
+          console.log("error while stopping: ", err ?? "No error info");
         });
     }}
     bind:this={fileinput}
@@ -196,4 +215,7 @@
   /* .displayNone {
     display: none;
   } */
+  #reader {
+    z-index: -1;
+  }
 </style>
