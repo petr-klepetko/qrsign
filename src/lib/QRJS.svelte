@@ -15,7 +15,7 @@
       height: squareSize,
       colorDark: "#000000",
       colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H,
+      correctLevel: QRCode.CorrectLevel.M,
     });
   };
 
@@ -42,8 +42,11 @@
 
 <style>
   #qrcode {
-    width: 20px;
+    width: 100%;
     height: 200x;
-    margin-top: 15px;
+    margin-top: 0px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
   }
 </style>

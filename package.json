@@ -17,6 +17,7 @@
   },
   "type": "module",
   "dependencies": {
+    "jsrsasign": "^10.8.6",
     "svelte-device-info": "^1.0.0",
     "svelte-modals": "^1.2.1",
     "svelte-qrcode": "^1.0.0"

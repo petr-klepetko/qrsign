@@ -1,52 +1,70 @@
 <script>
   import { onMount, onDestroy } from "svelte";
   import Device from "svelte-device-info";
-  import BackArrow from "$lib/BackArrow.svelte";
   import Button from "../../lib/Button.svelte";
-  // import QrCode from "svelte-qrcode";
+  import Center from "$lib/Center.svelte";
 
-  // import QRcomponent from "../../lib/QRcomponent.svelte";
   import QRCode, { qrcode } from "$lib/QRJS.svelte";
+  import DigitalSignature, {
+    sig,
+    // rsaPrivateKey,
+  } from "$lib/DigitalSignature.svelte";
 
-  // let QRcomponent;
-  const importQRcomponent = async () => {
-    try {
-      QRcomponent = (await import("$lib/QRcomponent.svelte")).default;
-    } catch (e) {
-      // do some thing
+  let debug = false;
+
+  console.log(sig);
+
+  const signText = (text) => {
+    // update data
+    sig.updateString(text);
+    // calculate signature
+    let sigValueHex = sig.sign();
+    // console.log("sigValueHex: ", sigValueHex);
+    return sigValueHex;
+  };
+
+  let finalQRCodeValue = {
+    templateId: 1,
+    fields: [],
+    signature: "",
+  };
+
+  const padString = (str) => {
+    console.log(str.length);
+    if (str.length <= 217 && str.length >= 192) {
+      console.log("192 - 217");
+      return str.padEnd(218);
+    } else {
+      console.log("Je to OK");
+      return str;
     }
   };
 
-  let unique = {}; // every {} is unique, {} === {} evaluates to false
-  const reloadQRcode = () => {
-    console.log("Reloaded");
-    unique = {};
-    qrcode.makeCode("AhojAhojAhoj");
-    // qrcode
+  const updateFinalQRValue = () => {
+    /** Create an array of just the values and encode special characters as if for a URL */
+    finalQRCodeValue.fields = currentTemplate.fields.map((field) =>
+      encodeURI(field.value)
+    );
+
+    finalQRCodeValue.signature = signText(
+      JSON.stringify(finalQRCodeValue.fields)
+    );
+
+    /** Pad to certain number because of the character counting error in the library*/
+    //padString(JSON.stringify(finalQRCodeValue.fields));
+
+    return finalQRCodeValue;
   };
-  // onMount(importQRcomponent);
 
-  // onMount(() => {
-  //   let script = document.createElement("script");
-  //   script.src =
-  //     "https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js";
-  //   document.head.append(script);
+  const reloadQRcode = () => {
+    finalQRCodeValue.signature = "";
+    updateFinalQRValue();
 
-  //   script.onload = function () {
-  //     qrcode = new QRCode("qrcode", {
-  //       text: codeValue,
-  //       width: squareSize,
-  //       height: squareSize,
-  //       colorDark: "#000000",
-  //       colorLight: "#ffffff",
-  //       correctLevel: QRCode.CorrectLevel.H,
-  //     });
-  //   };
-  // });
+    qrcode.makeCode(padString(JSON.stringify(finalQRCodeValue)));
+    console.log("Reloaded");
+    //console.log(JSON.stringify(currentData).padEnd(1000, "x"));
+  };
 
-  // onDestroy(() => {
-  //   QRcomponent = null;
-  // });
   let templates = [
     {
       id: 1,
@@ -77,20 +95,12 @@
       `,
   };
 
-  let test = "Test";
   console.log(currentTemplate.fields[0]);
   let formData = currentTemplate.fields.forEach((field) => {
     return field.value;
   });
 
-  // let currentData = [
-  //   { id: 1, value: "Petr Klepetko" },
-  //   { id: 2, value: "VŠE" },
-  //   { id: 3, value: "2023-01-01" },
-  //   { id: 4, value: "2024-01-01" },
-  // ];
-
-  let currentData = ["Petr Klepetko", "VŠE", "2023-01-01", "2024-01-01"];
+  let currentData = currentTemplate.fields.map((field) => field.value);
 </script>
 
 <!-- {currentTemplate.fields[0].value} -->
@@ -101,32 +111,46 @@
     <p>
       Student jménem <input
         bind:value={currentTemplate.fields[0].value}
-        on:change={null}
-        on:input={() => {
-          console.log(currentTemplate.fields[0].value);
+        on:change={() => {
+          //console.log(currentTemplate.fields[0].value);
           reloadQRcode();
         }}
         placeholder="Jméno"
       />
       studuje na škole
-      <input placeholder="Škola" bind:value={currentTemplate.fields[1].value} />
+      <input
+        placeholder="Škola"
+        bind:value={currentTemplate.fields[1].value}
+        on:change={() => {
+          //console.log(currentTemplate.fields[0].value);
+          reloadQRcode();
+        }}
+      />
       od
       <input
         type="date"
         placeholder="Datum od"
         bind:value={currentTemplate.fields[2].value}
+        on:change={() => {
+          //console.log(currentTemplate.fields[0].value);
+          reloadQRcode();
+        }}
       />
       do
       <input
         type="date"
         placeholder="Datum do"
         bind:value={currentTemplate.fields[3].value}
+        on:input={() => {
+          //console.log(currentTemplate.fields[0].value);
+          reloadQRcode();
+        }}
       />
     </p>
     <div class="qr-code" id="qr-code">
       <!-- <svelte:component this={QRcomponent} url={"https://github.com/"} /> -->
-
-      <QRCode codeValue={JSON.stringify(formData ?? "")} squareSize="200" />
+      <DigitalSignature />
+      <QRCode codeValue={JSON.stringify(formData ?? "")} squareSize="420" />
 
       <!-- <QrCode value="https://github.com/" /> -->
       <!-- <img src="/src/img/ahoj_kod.png" alt="qrCode" /> -->
@@ -134,8 +158,18 @@
   </div>
   <Button>Save</Button>
 </div>
-<pre>{JSON.stringify(currentTemplate.fields, null, 4)}</pre>
-{formData}
+{#if debug}
+  <Center>
+    <Center direction="column"
+      >Final QR code value:
+      <pre>{JSON.stringify(finalQRCodeValue, null, 4)}</pre>
+    </Center>
+    <Center direction="column">
+      Current data:<br />
+      <pre>{JSON.stringify(currentData, null, 4)}</pre>
+    </Center>
+  </Center>
+{/if}
 
 <style>
   .form-container {
@@ -155,12 +189,12 @@
     border: 1px solid;
   }
   .qr-code {
-    width: fit-content;
-    height: max;
+    width: 100%;
+    /* height: 100%; */
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: left;
     margin: 0;
     padding: 0;
+    /* background-color: pink; */
   }
 </style>
