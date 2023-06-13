@@ -75,7 +75,7 @@
   // console.log(templates[0].fields);
 </script>
 
-<BackArrow on:click={goBack} />
+<!-- <BackArrow on:click={goBack} /> -->
 <!-- {#each templates[0].fields as field}
   {field.name}
 {/each} -->

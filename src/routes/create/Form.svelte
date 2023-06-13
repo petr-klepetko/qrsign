@@ -188,8 +188,16 @@
   {#if editMode}
     <Button on:click={() => (editMode = false)}>Save</Button>
   {:else}
-    <Button on:click={() => window.print()}>Print</Button>
-    <Button on:click={() => (editMode = true)}>Back</Button>
+    <Center>
+      <Button on:click={() => (editMode = true)} cssClass={"small"}>Back</Button
+      >
+      <Button
+        on:click={() => {
+          window.print();
+        }}
+        cssClass={"small"}>Print</Button
+      >
+    </Center>
   {/if}
 </div>
 {#if debug}
@@ -218,7 +226,7 @@
     height: calc((100vw - 50px) * 1.414);
     max-width: 50vh;
     max-height: 70vh;
-    margin: 10px 0;
+    /* margin: 10px 0; */
     padding: 5px 10px;
     border: 1px solid;
   }
@@ -231,6 +239,10 @@
     padding: 0;
     padding-top: 3px;
     /* background-color: pink; */
+  }
+
+  img {
+    size: 100px;
   }
 
   @page {

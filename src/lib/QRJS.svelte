@@ -8,6 +8,8 @@
   export let codeValue;
   export let squareSize;
 
+  squareSize = 1000;
+
   const drawQRcode = () => {
     qrcode = new QRCode("qrcode", {
       text: codeValue,
@@ -48,9 +50,16 @@
   #qrcode {
     width: 100%;
     height: 200x;
+
     margin-top: 0px;
     display: flex;
     align-items: flex-end;
     justify-content: center;
+  }
+  @media print {
+    :global(img) {
+      margin-top: 10px;
+      width: 2000px;
+    }
   }
 </style>

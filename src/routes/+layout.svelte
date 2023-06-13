@@ -1,12 +1,35 @@
 <script>
   import { Modals, closeModal } from "svelte-modals";
+  import BackArrow from "$lib/BackArrow.svelte";
+  import Center from "$lib/Center.svelte";
+
+  /** Page history */
+  let pageHistory = [];
+
+  const goBack = () => {
+    if (!pageHistory[pageHistory.length - 1]) {
+      console.log("na zacatku");
+      if (browser) {
+        // to prevent error window is not defined, because it's SSR
+        window.location.href = "/";
+      }
+    } else {
+      currentPage = pageHistory.pop();
+    }
+  };
 </script>
 
 <div id="page-container">
   <header>
-    <a href="/">
-      <h1>QR SIGN!</h1>
-    </a>
+    <div class="left-header">
+      <BackArrow on:click={() => (window.location.href = "/")} />
+    </div>
+    <div class="center-header">
+      <a href="/">
+        <h1>QR SIGN!</h1>
+      </a>
+    </div>
+    <div class="right-header" />
   </header>
   <div class="main">
     <div class="container">
@@ -39,7 +62,22 @@
     height: 60px;
     text-align: center;
     border-bottom: rgba(0, 0, 0, 0.199) solid 1px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
+  .left-header {
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .right-header {
+    width: 80px;
+  }
+
   .main {
     padding-bottom: 2.5rem;
     position: absolute;

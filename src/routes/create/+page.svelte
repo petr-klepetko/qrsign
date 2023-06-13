@@ -76,7 +76,7 @@
   // console.log(templates[0].fields);
 </script>
 
-<BackArrow on:click={goBack} />
+<!-- <BackArrow on:click={goBack} /> -->
 
 <!-- {#if currentPage == "ScanMenu"}
   <ScanMenu on:read={handleClick} />
