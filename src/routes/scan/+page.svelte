@@ -15,7 +15,7 @@
 
   let isMobile = null;
   onMount(() => {
-    console.log("this device is " + (Device.isMobile ? "" : "not") + " mobile");
+    // console.log("this device is " + (Device.isMobile ? "" : "not") + " mobile");
     isMobile = Device.isMobile;
   });
 

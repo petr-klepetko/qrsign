@@ -3,7 +3,7 @@
   export let label = null;
   export let cssClass = null;
 
-  console.log("Class: ", cssClass);
+  // console.log("Class: ", cssClass);
 </script>
 
 <button on:click class={cssClass}>

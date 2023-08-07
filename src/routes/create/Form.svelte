@@ -7,6 +7,8 @@
   import QRCode, { qrcode } from "$lib/QRJS.svelte";
   import DigitalSignature, {
     sig,
+    signText2,
+    validateText,
     // rsaPrivateKey,
   } from "$lib/DigitalSignature.svelte";
 
@@ -47,7 +49,8 @@
       encodeURI(field.value)
     );
 
-    finalQRCodeValue.signature = signText(
+    console.log("text: ", JSON.stringify(finalQRCodeValue.fields));
+    finalQRCodeValue.signature = signText2(
       JSON.stringify(finalQRCodeValue.fields)
     );
 
@@ -102,6 +105,10 @@
   });
 
   let currentData = currentTemplate.fields.map((field) => field.value);
+
+  // const verifySignature = (sigValueHex) {
+
+  // }
 </script>
 
 <!-- {currentTemplate.fields[0].value} -->
