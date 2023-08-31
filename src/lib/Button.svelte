@@ -2,6 +2,8 @@
   export let iconPath = null;
   export let label = null;
   export let cssClass = null;
+
+  // console.log("Class: ", cssClass);
 </script>
 
 <button on:click class={cssClass}>
@@ -22,6 +24,7 @@
     border-radius: 10px;
     font-size: 20px;
     cursor: pointer;
+    margin: 10px 5px;
   }
   button:hover {
     background: rgb(218, 218, 218);
@@ -30,5 +33,14 @@
     background: black;
     color: rgb(239, 239, 239);
     border-color: rgb(239, 239, 239);
+  }
+  .small {
+    min-width: 0px;
+    width: 100px;
+  }
+  @media print {
+    button {
+      display: none;
+    }
   }
 </style>

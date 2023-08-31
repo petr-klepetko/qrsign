@@ -8,7 +8,6 @@
   <h1>Welcome to QR SIGN!</h1>
 </header>
 
-<!-- <div id="container"> -->
 <Center direction="column">
   <Spacer height="40px" />
 
@@ -17,10 +16,8 @@
   </a>
   <div id="textOr">or</div>
 
-  <Button>Create</Button>
+  <a href="/create"><Button>Create</Button></a>
 </Center>
-
-<!-- </div> -->
 
 <style>
   header {

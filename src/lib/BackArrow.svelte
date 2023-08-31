@@ -18,7 +18,7 @@
     width: 100%;
   }
   .arrow {
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     position: relative;
     width: fit-content;
     padding: 2px;
@@ -36,5 +36,11 @@
   }
   img {
     margin-right: 10px;
+  }
+
+  @media print {
+    .arrow {
+      display: none;
+    }
   }
 </style>
