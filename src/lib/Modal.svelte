@@ -1,6 +1,7 @@
 <script>
   import { closeModal } from "svelte-modals";
   import Button from "./Button.svelte";
+  import Center from "./Center.svelte";
 
   // provided by <Modals />
   export let isOpen;
@@ -15,7 +16,6 @@
       <h2>{title}</h2>
       <p>{message}</p>
       <div class="actions">
-        <!-- <button on:click={closeModal}>OK</button> -->
         <Button on:click={closeModal}>Ok</Button>
       </div>
     </div>
@@ -32,6 +32,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 
     /* allow click-through to backdrop */
     pointer-events: none;

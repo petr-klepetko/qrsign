@@ -5,26 +5,16 @@
   import Center from "$lib/Center.svelte";
 
   import QRCode, { qrcode } from "$lib/QRJS.svelte";
-  import DigitalSignature, {
-    sig,
-    signText2,
-    validateText,
-    // rsaPrivateKey,
-  } from "$lib/DigitalSignature.svelte";
+  // import DigitalSignature, {
+  //   sig,
+  //   signText2,
+  //   validateText,
+  //   // rsaPrivateKey,
+  // } from "$lib/DigitalSignature.svelte";
+  import SigningUtility, { signingUtility } from "./SigningUtility.svelte";
 
   let debug = false;
   let editMode = true;
-
-  console.log(sig);
-
-  const signText = (text) => {
-    // update data
-    sig.updateString(text);
-    // calculate signature
-    let sigValueHex = sig.sign();
-    // console.log("sigValueHex: ", sigValueHex);
-    return sigValueHex;
-  };
 
   let finalQRCodeValue = {
     templateId: 1,
@@ -43,15 +33,17 @@
     }
   };
 
-  const updateFinalQRValue = () => {
+  const updateFinalQRValue = async () => {
     /** Create an array of just the values and encode special characters as if for a URL */
     finalQRCodeValue.fields = currentTemplate.fields.map((field) =>
       encodeURI(field.value)
     );
 
     console.log("text: ", JSON.stringify(finalQRCodeValue.fields));
-    finalQRCodeValue.signature = signText2(
-      JSON.stringify(finalQRCodeValue.fields)
+    finalQRCodeValue.signature = await signingUtility.sign(
+      signingUtility.keys.private,
+      JSON.stringify(finalQRCodeValue.fields),
+      "b64"
     );
 
     /** Pad to certain number because of the character counting error in the library*/
@@ -60,11 +52,16 @@
     return finalQRCodeValue;
   };
 
-  const reloadQRcode = () => {
+  const reloadQRcode = async () => {
     finalQRCodeValue.signature = "";
-    updateFinalQRValue();
+    await updateFinalQRValue();
 
-    qrcode.makeCode(padString(JSON.stringify(finalQRCodeValue)));
+    const textForQR = padString(JSON.stringify(finalQRCodeValue));
+
+    console.log("textForQR: ", textForQR);
+    qrcode.makeCode(
+      `{"templateId":1,"fields":["as","","",""],"signature":"eNo9U7uu6yAQ/CU/y1NYgQIpYEWxi9QurNglBYavvzODcwukZL3szgu/rOlppuiXdXyaz/A0Lvmciv+mDif75Yz+YI/t/CP14Z2uYM44647v2I9vJTxSDuYTw7KhfhbU2vmtGQ3ONau+9k/zwh2P72vG3Yyey5cd3yx2W+x6sQfHNfMDdx/Yd/x2WdZT0J0Xaq5FbQRe/F9jECbbCes3Dbh/+WOLszhMF+qZtWCIZQfuTbzUZ14xlA8xAtc6VIx2DJnY10gthNVwnnbzeyHO2uOxg3hc49/8j53Lhu8bdLWXlz4O+hDjyd3AS77cZ3nIN4fFxopvy7eGV1iIy1EvcODMcxTud+rB/dbXUyPySdSM2Csv7Dtsg/8DejPxV+2oh2vR20HPDN1jOFbiIa+kmvFR3Bfg/lI34kAffTY7MkCcL2j1IdYOGeiVGc7MqcXvUvFbzJGH6NtH6cr6sdNv8Q/0RRquwOVHcg3fiqtm0/X3aeh3EC7utpewFf/jyXl9xYud5YTmDvvlLfTxw50PZMZFZe9gZpTZgV4y38zT7WfirOo9teRO5e5SDqFDfSfKhDTlW/CL7t+e0a99EHbwpM++IEfaw2ySr3jfHnA+fXBFnpHDob440xfldCLeTC1m5qjuY89wc2yJ29e80SNotzecqRm4I/2pwWIvec5dB3Okd9FWT1yshzvORtr+eC8f5psaFb0B1KovymHW2y1TrLmR7+LEbNV3MKXb64RdXc2nfGTGMWu/Z9WMVN3+zy9h+vv7B99wn/c="}`
+    );
     console.log("Reloaded");
     //console.log(JSON.stringify(currentData).padEnd(1000, "x"));
   };
@@ -106,9 +103,9 @@
 
   let currentData = currentTemplate.fields.map((field) => field.value);
 
-  // const verifySignature = (sigValueHex) {
-
-  // }
+  onMount(async () => {
+    await signingUtility.init();
+  });
 </script>
 
 <!-- {currentTemplate.fields[0].value} -->
@@ -185,7 +182,7 @@
     {/if}
     <div class="qr-code" id="qr-code">
       <!-- <svelte:component this={QRcomponent} url={"https://github.com/"} /> -->
-      <DigitalSignature />
+      <!-- <DigitalSignature /> -->
       <QRCode codeValue={JSON.stringify(formData ?? "")} squareSize="420" />
 
       <!-- <QrCode value="https://github.com/" /> -->
