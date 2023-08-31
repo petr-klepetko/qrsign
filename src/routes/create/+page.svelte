@@ -6,6 +6,8 @@
 </script>
 
 <script>
+  import FormReDone from "./Form.svelte";
+
   let templates = [
     {
       id: 1,
@@ -46,6 +48,7 @@
   let currentData = ["Petr Klepetko", "VŠE", "2023-01-01", "2024-01-01"];
 
   // let currentPage = isMobile ? "ScanMenuMobile" : "ScanMenu";
+  // let currentPage = "form";
   let currentPage = "form";
   let pageHistory = [];
   let avatar, fileinput;
@@ -90,6 +93,8 @@
 
 {#if currentPage === "form"}
   <Form />
+{:else if currentPage === "formReDone"}
+  <FormReDone />
 {/if}
 
 <style>

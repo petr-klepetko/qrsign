@@ -3,6 +3,7 @@
   export let fileinput;
   export let qrCodeValue;
   export let scannerIsLoaded = false;
+  export let refreshScanning;
   import Center from "$lib/Center.svelte";
   import Button from "$lib/Button.svelte";
   import Spacer from "$lib/Spacer.svelte";
@@ -67,6 +68,7 @@
     <Button
       on:click={async () => {
         console.log("Try again button clicked");
+        refreshScanning();
         // qrCodeValue = null;
         // uploadedImage = null;
         // scanningIsLoaded = false;
