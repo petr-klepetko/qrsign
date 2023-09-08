@@ -33,7 +33,7 @@
   let html5QrCode;
 
   let uploadedImage;
-  let qrCodeValue;
+  export let qrCodeValue;
 
   let scanCompleted = false;
   let scannerIsLoaded = false;
@@ -70,7 +70,7 @@
   };
 
   onMount(async () => {
-    sayHello();
+    // sayHello();
     // return;
     html5QrCode = new Html5Qrcode(/* element id */ "reader");
 
@@ -144,7 +144,7 @@
     accept=".jpg, .jpeg, .png, .heic"
     on:change={(e) => {
       onFileSelected(e);
-      console.log("on change fired");
+      // console.log("on change fired");
     }}
     bind:this={fileinput}
   />

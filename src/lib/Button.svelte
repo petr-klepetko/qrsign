@@ -2,11 +2,12 @@
   export let iconPath = null;
   export let label = null;
   export let cssClass = null;
+  export let buttonType = "";
 
   // console.log("Class: ", cssClass);
 </script>
 
-<button on:click class={cssClass}>
+<button on:click class={cssClass} type={buttonType}>
   {#if iconPath}<img src="iconPath" alt="icon" />{/if}
   {#if label}{label}{/if}
   <slot />

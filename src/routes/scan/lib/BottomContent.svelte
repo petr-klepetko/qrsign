@@ -46,7 +46,7 @@
           return;
         }
         fileinput.click();
-        console.log("button clicked");
+        // console.log("button clicked");
       }}>Upload an image</Button
     >
   </Center>
@@ -67,7 +67,7 @@
     <div id="textOr">or</div>
     <Button
       on:click={async () => {
-        console.log("Try again button clicked");
+        // console.log("Try again button clicked");
         refreshScanning();
         // qrCodeValue = null;
         // uploadedImage = null;

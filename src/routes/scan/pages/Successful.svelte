@@ -1,8 +1,28 @@
 <script>
+  import { onMount } from "svelte";
+
+  export let qrCodeValue = {};
+
+  // import { signingUtility } from "../../create/SigningUtility.svelte";
+  import { verify } from "../lib/signingUtils.svelte";
+
+  console.log("qrCodeValue: ", qrCodeValue);
   let sender = {
     name: "Sender name",
     certificateInfo: "Certificate info",
   };
+
+  $: if (typeof qrCodeValue !== "object") {
+    console.log("typeof(qrCodeValue): ", typeof qrCodeValue);
+    try {
+      qrCodeValue = JSON.parse(qrCodeValue);
+    } catch (error) {}
+  }
+
+  onMount(async () => {
+    const responseFromVerify = await verify(qrCodeValue);
+    console.log("responseFromVerify: ", responseFromVerify);
+  });
 </script>
 
 <div>

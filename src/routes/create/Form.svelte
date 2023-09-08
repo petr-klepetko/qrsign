@@ -27,13 +27,18 @@
 
   const reloadQRcode = async () => {
     // finalQRCodeValue.signature = "";
+    // console.log("finalQRCodeValue: ", finalQRCodeValue);
     finalQRCodeValue = await updateFinalQRValue(
       signingUtility,
       finalQRCodeValue,
       currentTemplate
     );
-
+    // console.log("finalQRCodeValue: ", finalQRCodeValue);
     qrcode.makeCode(padString(JSON.stringify(finalQRCodeValue)));
+    console.log(
+      "finalQRCodeValue: ",
+      padString(JSON.stringify(finalQRCodeValue))
+    );
   };
 
   let currentTemplate = templates[0];
@@ -113,9 +118,9 @@
   </div>
 
   {#if editMode}
-    <Button hidden={!editMode} on:click={() => (editMode = false)}>Save</Button>
+    <Button on:click={() => (editMode = false)}>Save</Button>
   {:else}
-    <Center hidden={editMode}>
+    <Center>
       <Button on:click={() => (editMode = true)} cssClass={"small"}>Back</Button
       >
       <Button

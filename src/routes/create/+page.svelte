@@ -79,17 +79,7 @@
   // console.log(templates[0].fields);
 </script>
 
-<!-- <BackArrow on:click={goBack} /> -->
 
-<!-- {#if currentPage == "ScanMenu"}
-  <ScanMenu on:read={handleClick} />
-{:else if currentPage == "ScanMenuMobile"}
-  <ScanMenuMobile on:read={handleClick} />
-{:else if currentPage == "Successful"}
-  <Successful />
-{:else if currentPage == "Unsuccessful"}
-  <Unsuccessful />
-{/if} -->
 
 {#if currentPage === "form"}
   <Form />

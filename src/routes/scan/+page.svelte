@@ -21,6 +21,8 @@
   // let currentPage = isMobile ? "ScanMenuMobile" : "ScanMenu";
   let currentPage = "ScanMenu";
   let pageHistory = [];
+
+  let qrCodeValue;
   let avatar, fileinput;
 
   // const onFileSelected = (e) => {
@@ -33,26 +35,30 @@
   // };
 
   const handleClick = (e) => {
+    // console.log(e);
+    // console.log("qrCodeValue: ", qrCodeValue);
     let option = e.detail;
     pageHistory.push(currentPage);
-    console.log(pageHistory);
-    let success = false;
+    // console.log(pageHistory);
+    let success = true;
     if (success) {
       currentPage = "Successful";
     } else {
       currentPage = "Unsuccessful";
     }
   };
+
+  // const verify
 </script>
 
 {#if currentPage == "ScanMenu"}
-  <ScanMenu on:read={handleClick} />
+  <ScanMenu on:read={handleClick} bind:qrCodeValue />
 {:else if currentPage == "ScanMenuMobile"}
   <ScanMenuMobile on:read={handleClick} />
   <!-- {:else if currentPage == "ScanMenuReDone"}
   <ScanMenuReDone on:read={handleClick} /> -->
 {:else if currentPage == "Successful"}
-  <Successful />
+  <Successful bind:qrCodeValue />
 {:else if currentPage == "Unsuccessful"}
   <Unsuccessful />
 {/if}
