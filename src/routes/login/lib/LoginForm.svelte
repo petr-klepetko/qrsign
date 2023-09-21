@@ -11,6 +11,13 @@
     PUBLIC_LOGIN_ENDPOINT as LOGIN_ENDPOINT,
   } from "$env/static/public";
 
+  import { redirect } from "@sveltejs/kit";
+  import { goto } from "$app/navigation";
+  import { createEventDispatcher } from "svelte";
+  import { browser } from "$app/environment";
+
+  export let user;
+
   let email = "klepetkope3@gmail.com";
   let password = "Heslo";
 
@@ -24,13 +31,8 @@
     console.log("email: ", email);
     console.log("password: ", password);
 
-    // const url = process.env.BE_URL;
-    // const port = process.env.BE_PORT;
-    // const loginEndpoint = precess.env.LOGIN_ENDPOINT;
-
     const optionsAxios = {
       method: "POST",
-      // url: "http://localhost:8079/auth/login",
       url: `${BE_URL}:${BE_PORT}${LOGIN_ENDPOINT}`,
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
@@ -40,47 +42,23 @@
       }),
     };
 
-    const optionsFetch = {
-      method: "POST",
-      // url: "http://localhost:8079/auth/login",
-      url: `${BE_URL}:${BE_PORT}${LOGIN_ENDPOINT}`,
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    };
-
     let response;
-    // try {
-    //   response = await fetch("http://localhost:8079/auth/login", optionsFetch);
-    //   console.log(response);
-    //   console.log(response.headers.getSetCookie());
-    //   response = await response.json();
-
-    //   if (response.message !== "success") {
-    //     responseError = response.message;
-    //   } else {
-    //     responseError = "";
-    //   }
-    //   console.log(response);
-    // } catch (error) {
-    //   console.log("error: ", error);
-    // }
 
     try {
       response = await axios.request(optionsAxios);
-      console.log(response);
-      console.log(response.headers["set-cookie"]);
-      // response = await response.json();
 
       if (response.message !== "success") {
         responseError = response.message;
       } else {
         responseError = "";
       }
-      // console.log(response);
+
+      // user = user;
+      // goto("/");
+      if (browser) {
+        // to prevent error window is not defined, because it's SSR
+        window.location.href = "/";
+      }
     } catch (error) {
       console.log("error: ", error);
     }

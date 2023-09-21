@@ -2,6 +2,19 @@
   import Button from "$lib/Button.svelte";
   import Center from "$lib/Center.svelte";
   import Spacer from "$lib/Spacer.svelte";
+
+  export let user = {};
+  export let test;
+
+  /** @type {import('./$types').PageData} */
+  export let data;
+
+  $: {
+    user = user;
+    console.log("USer: ", user);
+    console.log("test: ", test);
+    console.log("data: ", data);
+  }
 </script>
 
 <header>
@@ -14,9 +27,11 @@
   <a href="/scan">
     <Button>Scan</Button>
   </a>
-  <div id="textOr">or</div>
+  {#if typeof data.user.name !== "undefined"}
+    <div id="textOr">or</div>
 
-  <a href="/create"><Button>Create</Button></a>
+    <a href="/create"><Button>Create</Button></a>
+  {/if}
 </Center>
 
 <style>
