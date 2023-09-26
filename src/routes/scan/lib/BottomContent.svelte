@@ -3,6 +3,7 @@
   export let fileinput;
   export let qrCodeValue;
   export let scannerIsLoaded = false;
+  export let refreshScanning;
   import Center from "$lib/Center.svelte";
   import Button from "$lib/Button.svelte";
   import Spacer from "$lib/Spacer.svelte";
@@ -45,7 +46,7 @@
           return;
         }
         fileinput.click();
-        console.log("button clicked");
+        // console.log("button clicked");
       }}>Upload an image</Button
     >
   </Center>
@@ -66,7 +67,8 @@
     <div id="textOr">or</div>
     <Button
       on:click={async () => {
-        console.log("Try again button clicked");
+        // console.log("Try again button clicked");
+        refreshScanning();
         // qrCodeValue = null;
         // uploadedImage = null;
         // scanningIsLoaded = false;

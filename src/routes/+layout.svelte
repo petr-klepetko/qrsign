@@ -1,7 +1,14 @@
 <script>
+  import { setContext } from "svelte";
   import { Modals, closeModal } from "svelte-modals";
   import BackArrow from "$lib/BackArrow.svelte";
-  import Center from "$lib/Center.svelte";
+
+  import { openModal } from "svelte-modals";
+  import UserModal from "$lib/UserModal.svelte";
+
+  import { page } from "$app/stores";
+
+  import { writable } from "svelte/store";
 
   /** Page history */
   let pageHistory = [];
@@ -17,6 +24,23 @@
       currentPage = pageHistory.pop();
     }
   };
+
+  export let data;
+  console.log("data (+layout.svelte): ", data);
+
+  const user = data?.user;
+  user.initials = user?.name?.split(" ")[0][0] + user?.name?.split(" ")[1][0];
+  console.log("user (+layout.svelte): ", user);
+
+  const userStored = writable();
+  $: {
+    userStored.set(data?.user);
+  }
+  setContext("userStored", userStored);
+
+  const openUserModal = () => {
+    openModal(UserModal, { user });
+  };
 </script>
 
 <div id="page-container">
@@ -29,13 +53,31 @@
         <h1>QR SIGN!</h1>
       </a>
     </div>
-    <div class="right-header" />
+    <div class="right-header">
+      {#if !user?.anonymous}
+        <div
+          on:keypress={openUserModal}
+          on:click={openUserModal}
+          id="user-info"
+        >
+          {user.initials ?? "XX"}
+        </div>
+      {:else}
+        <a href="/login">Login</a>
+      {/if}
+    </div>
   </header>
   <div class="main">
     <div class="container">
       <Modals>
-        <div slot="backdrop" class="backdrop" on:click={closeModal} />
-      </Modals><slot />
+        <div
+          slot="backdrop"
+          class="backdrop"
+          on:click={closeModal}
+          on:keypress={closeModal}
+        /></Modals
+      >
+      <slot />
     </div>
   </div>
   <footer>2023, Petr Klepetko, VŠE</footer>
@@ -47,6 +89,7 @@
     padding: 0;
     font-family: "Courier New", Courier, monospace;
     height: fit-content;
+    overflow-x: hidden;
   }
   #page-container {
     position: relative;
@@ -68,14 +111,18 @@
     justify-content: space-between;
   }
   .left-header {
-    width: 80px;
+    width: 150px;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
   }
 
   .right-header {
-    width: 80px;
+    width: 150px;
+  }
+
+  .center-header {
+    min-width: max-content;
   }
 
   .main {
@@ -105,12 +152,22 @@
   }
   .container {
     height: 100%;
+    width: 100%;
     overflow: scroll;
     padding: 15px;
   }
   a {
     text-decoration: none;
     color: inherit;
+  }
+
+  #user-info {
+    max-width: 100%;
+  }
+
+  #user-info:hover {
+    background-color: rgba(0, 0, 0, 0.091);
+    cursor: pointer;
   }
 
   @media print {

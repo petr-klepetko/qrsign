@@ -29,7 +29,7 @@
 
     let availableParentWidth =
       document.getElementById("qrcode").parentElement.clientWidth - 50;
-    console.log("parent width: ", availableParentWidth);
+    // console.log("parent width: ", availableParentWidth);
 
     script.onload = function () {
       qrcode = new QRCode("qrcode", {
@@ -41,6 +41,7 @@
         correctLevel: QRCode.CorrectLevel.H,
       });
     };
+    console.log("Mělo by se vytvořit. ");
   });
 </script>
 

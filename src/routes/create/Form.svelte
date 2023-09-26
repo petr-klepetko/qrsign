@@ -1,17 +1,19 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import Device from "svelte-device-info";
-  import Button from "../../lib/Button.svelte";
+
+  import Button from "$lib/Button.svelte";
   import Center from "$lib/Center.svelte";
 
   import QRCode, { qrcode } from "$lib/QRJS.svelte";
-  // import DigitalSignature, {
-  //   sig,
-  //   signText2,
-  //   validateText,
-  //   // rsaPrivateKey,
-  // } from "$lib/DigitalSignature.svelte";
-  import SigningUtility, { signingUtility } from "./SigningUtility.svelte";
+
+  import { signingUtility } from "./SigningUtility.svelte";
+
+  import {
+    padString,
+    templates,
+    updateFinalQRValue,
+    prepareFormField,
+  } from "./lib/utils.svelte";
 
   let debug = false;
   let editMode = true;
@@ -20,83 +22,24 @@
     templateId: 1,
     fields: [],
     signature: "",
-  };
-
-  const padString = (str) => {
-    console.log(str.length);
-    if (str.length <= 217 && str.length >= 192) {
-      console.log("192 - 217");
-      return str.padEnd(218);
-    } else {
-      console.log("Je to OK");
-      return str;
-    }
-  };
-
-  const updateFinalQRValue = async () => {
-    /** Create an array of just the values and encode special characters as if for a URL */
-    finalQRCodeValue.fields = currentTemplate.fields.map((field) =>
-      encodeURI(field.value)
-    );
-
-    console.log("text: ", JSON.stringify(finalQRCodeValue.fields));
-    finalQRCodeValue.signature = await signingUtility.sign(
-      signingUtility.keys.private,
-      JSON.stringify(finalQRCodeValue.fields),
-      "b64"
-    );
-
-    /** Pad to certain number because of the character counting error in the library*/
-    //padString(JSON.stringify(finalQRCodeValue.fields));
-
-    return finalQRCodeValue;
+    author: "",
   };
 
   const reloadQRcode = async () => {
-    finalQRCodeValue.signature = "";
-    await updateFinalQRValue();
-
-    const textForQR = padString(JSON.stringify(finalQRCodeValue));
-
-    console.log("textForQR: ", textForQR);
-    qrcode.makeCode(
-      `{"templateId":1,"fields":["as","","",""],"signature":"eNo9U7uu6yAQ/CU/y1NYgQIpYEWxi9QurNglBYavvzODcwukZL3szgu/rOlppuiXdXyaz/A0Lvmciv+mDif75Yz+YI/t/CP14Z2uYM44647v2I9vJTxSDuYTw7KhfhbU2vmtGQ3ONau+9k/zwh2P72vG3Yyey5cd3yx2W+x6sQfHNfMDdx/Yd/x2WdZT0J0Xaq5FbQRe/F9jECbbCes3Dbh/+WOLszhMF+qZtWCIZQfuTbzUZ14xlA8xAtc6VIx2DJnY10gthNVwnnbzeyHO2uOxg3hc49/8j53Lhu8bdLWXlz4O+hDjyd3AS77cZ3nIN4fFxopvy7eGV1iIy1EvcODMcxTud+rB/dbXUyPySdSM2Csv7Dtsg/8DejPxV+2oh2vR20HPDN1jOFbiIa+kmvFR3Bfg/lI34kAffTY7MkCcL2j1IdYOGeiVGc7MqcXvUvFbzJGH6NtH6cr6sdNv8Q/0RRquwOVHcg3fiqtm0/X3aeh3EC7utpewFf/jyXl9xYud5YTmDvvlLfTxw50PZMZFZe9gZpTZgV4y38zT7WfirOo9teRO5e5SDqFDfSfKhDTlW/CL7t+e0a99EHbwpM++IEfaw2ySr3jfHnA+fXBFnpHDob440xfldCLeTC1m5qjuY89wc2yJ29e80SNotzecqRm4I/2pwWIvec5dB3Okd9FWT1yshzvORtr+eC8f5psaFb0B1KovymHW2y1TrLmR7+LEbNV3MKXb64RdXc2nfGTGMWu/Z9WMVN3+zy9h+vv7B99wn/c="}`
+    finalQRCodeValue = await updateFinalQRValue(
+      signingUtility,
+      finalQRCodeValue,
+      currentTemplate
     );
-    console.log("Reloaded");
-    //console.log(JSON.stringify(currentData).padEnd(1000, "x"));
+    qrcode.makeCode(padString(JSON.stringify(finalQRCodeValue)));
+    console.log(
+      "finalQRCodeValue: ",
+      padString(JSON.stringify(finalQRCodeValue))
+    );
   };
 
-  let templates = [
-    {
-      id: 1,
-      header: "Potvrzení o studiu",
-      fields: [
-        { id: 1, name: "Jméno" },
-        { id: 2, name: "Škola" },
-        { id: 3, name: "Datum od" },
-        { id: 4, name: "Datum do" },
-      ],
-      html: `
-      <div></div>
-      `,
-    },
-  ];
+  let currentTemplate = templates[0];
 
-  let currentTemplate = {
-    id: 1,
-    header: "Potvrzení o studiu",
-    fields: [
-      { id: 1, name: "Jméno", value: "" },
-      { id: 2, name: "Škola", value: "" },
-      { id: 3, name: "Datum od", value: "" },
-      { id: 4, name: "Datum do", value: "" },
-    ],
-    html: `
-      <div></div>
-      `,
-  };
-
-  console.log(currentTemplate.fields[0]);
   let formData = currentTemplate.fields.forEach((field) => {
     return field.value;
   });
@@ -118,7 +61,6 @@
         Student jménem <input
           bind:value={currentTemplate.fields[0].value}
           on:change={() => {
-            //console.log(currentTemplate.fields[0].value);
             reloadQRcode();
           }}
           placeholder="Jméno"
@@ -128,7 +70,6 @@
           placeholder="Škola"
           bind:value={currentTemplate.fields[1].value}
           on:change={() => {
-            //console.log(currentTemplate.fields[0].value);
             reloadQRcode();
           }}
         />
@@ -138,7 +79,6 @@
           placeholder="Datum od"
           bind:value={currentTemplate.fields[2].value}
           on:change={() => {
-            //console.log(currentTemplate.fields[0].value);
             reloadQRcode();
           }}
         />
@@ -148,47 +88,26 @@
           placeholder="Datum do"
           bind:value={currentTemplate.fields[3].value}
           on:input={() => {
-            //console.log(currentTemplate.fields[0].value);
             reloadQRcode();
           }}
         />
       </p>
     {:else}
       <p>
-        Student jménem <strong
-          >{currentTemplate.fields[0].value != ""
-            ? currentTemplate.fields[0].value
-            : `[${currentTemplate.fields[0].name}]`}</strong
-        >
+        Student jménem {@html prepareFormField(currentTemplate.fields[0])}
         studuje na škole
-        <strong
-          >{currentTemplate.fields[1].value != ""
-            ? currentTemplate.fields[1].value
-            : `[${currentTemplate.fields[1].name}]`}</strong
-        >
+        {@html prepareFormField(currentTemplate.fields[1])}
         od
-        <strong
-          >{currentTemplate.fields[2].value != ""
-            ? currentTemplate.fields[2].value
-            : `[${currentTemplate.fields[2].name}]`}</strong
-        >
+        {@html prepareFormField(currentTemplate.fields[2])}
         do
-        <strong
-          >{currentTemplate.fields[3].value != ""
-            ? currentTemplate.fields[3].value
-            : `[${currentTemplate.fields[3].name}]`}</strong
-        >
+        {@html prepareFormField(currentTemplate.fields[3])}
       </p>
     {/if}
     <div class="qr-code" id="qr-code">
-      <!-- <svelte:component this={QRcomponent} url={"https://github.com/"} /> -->
-      <!-- <DigitalSignature /> -->
       <QRCode codeValue={JSON.stringify(formData ?? "")} squareSize="420" />
-
-      <!-- <QrCode value="https://github.com/" /> -->
-      <!-- <img src="/src/img/ahoj_kod.png" alt="qrCode" /> -->
     </div>
   </div>
+
   {#if editMode}
     <Button on:click={() => (editMode = false)}>Save</Button>
   {:else}
@@ -204,6 +123,7 @@
     </Center>
   {/if}
 </div>
+
 {#if debug}
   <Center>
     <Center direction="column"

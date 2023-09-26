@@ -2,6 +2,10 @@
   import Button from "$lib/Button.svelte";
   import Center from "$lib/Center.svelte";
   import Spacer from "$lib/Spacer.svelte";
+  import { getContext } from "svelte";
+
+  const user = getContext("userStored");
+  console.log("userStored (+page.svelte)", $user);
 </script>
 
 <header>
@@ -14,9 +18,11 @@
   <a href="/scan">
     <Button>Scan</Button>
   </a>
-  <div id="textOr">or</div>
 
-  <a href="/create"><Button>Create</Button></a>
+  {#if !$user.anonymous}
+    <div id="textOr">or</div>
+    <a href="/create"><Button>Create</Button></a>
+  {/if}
 </Center>
 
 <style>
@@ -26,12 +32,6 @@
   }
   h1 {
     margin: 100px 40px 10px 40px;
-  }
-  #container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
   }
   #textOr {
     margin: 10px auto;
