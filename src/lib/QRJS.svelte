@@ -41,6 +41,7 @@
         correctLevel: QRCode.CorrectLevel.H,
       });
     };
+    console.log("Mělo by se vytvořit. ");
   });
 </script>
 

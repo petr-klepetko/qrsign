@@ -129,7 +129,7 @@
       const qrCodeValueNoSignature = qrCodeValue;
       qrCodeValueNoSignature.signature = "";
       message = JSON.stringify(qrCodeValueNoSignature);
-      console.log(message);
+      // console.log(message);
     } catch (error) {
       console.log("error: ", error);
     }
@@ -167,11 +167,11 @@
     }
 
     try {
-      console.log("publicKey: ", publicKey);
-      console.log("signatureValue: ", signatureValue);
-      console.log("message: ", message);
+      // console.log("publicKey: ", publicKey);
+      // console.log("signatureValue: ", signatureValue);
+      // console.log("message: ", message);
       const response = await verifyMessage(publicKey, signatureValue, message);
-      console.log("response: ", response);
+      // console.log("response: ", response);
       return response;
     } catch (error) {
       console.log("error: ", error);

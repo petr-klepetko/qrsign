@@ -1,5 +1,4 @@
 <script>
-  import { getContext } from "svelte";
   import { setContext } from "svelte";
   import { Modals, closeModal } from "svelte-modals";
   import BackArrow from "$lib/BackArrow.svelte";
@@ -34,16 +33,12 @@
   console.log("user (+layout.svelte): ", user);
 
   const userStored = writable();
-
   $: {
     userStored.set(data?.user);
   }
-
   setContext("userStored", userStored);
 
   const openUserModal = () => {
-    console.log("ahoj");
-    console.log(user);
     openModal(UserModal, { user });
   };
 </script>
@@ -60,7 +55,11 @@
     </div>
     <div class="right-header">
       {#if !user?.anonymous}
-        <div on:click={openUserModal} id="user-info">
+        <div
+          on:keypress={openUserModal}
+          on:click={openUserModal}
+          id="user-info"
+        >
           {user.initials ?? "XX"}
         </div>
       {:else}

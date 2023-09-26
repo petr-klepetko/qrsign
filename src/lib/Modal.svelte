@@ -14,7 +14,7 @@
   <div role="dialog" class="modal">
     <div class="contents">
       <h2>{title}</h2>
-      <p>{message}</p>
+      <p>{@html message}</p>
       <div class="actions">
         <Button on:click={closeModal}>Ok</Button>
       </div>

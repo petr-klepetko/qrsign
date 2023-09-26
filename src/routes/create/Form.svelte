@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import Device from "svelte-device-info";
-  import Button from "../../lib/Button.svelte";
+
+  import Button from "$lib/Button.svelte";
   import Center from "$lib/Center.svelte";
 
   import QRCode, { qrcode } from "$lib/QRJS.svelte";
@@ -26,14 +26,11 @@
   };
 
   const reloadQRcode = async () => {
-    // finalQRCodeValue.signature = "";
-    // console.log("finalQRCodeValue: ", finalQRCodeValue);
     finalQRCodeValue = await updateFinalQRValue(
       signingUtility,
       finalQRCodeValue,
       currentTemplate
     );
-    // console.log("finalQRCodeValue: ", finalQRCodeValue);
     qrcode.makeCode(padString(JSON.stringify(finalQRCodeValue)));
     console.log(
       "finalQRCodeValue: ",
@@ -64,7 +61,6 @@
         Student jménem <input
           bind:value={currentTemplate.fields[0].value}
           on:change={() => {
-            //console.log(currentTemplate.fields[0].value);
             reloadQRcode();
           }}
           placeholder="Jméno"
@@ -74,7 +70,6 @@
           placeholder="Škola"
           bind:value={currentTemplate.fields[1].value}
           on:change={() => {
-            //console.log(currentTemplate.fields[0].value);
             reloadQRcode();
           }}
         />
@@ -84,7 +79,6 @@
           placeholder="Datum od"
           bind:value={currentTemplate.fields[2].value}
           on:change={() => {
-            //console.log(currentTemplate.fields[0].value);
             reloadQRcode();
           }}
         />
@@ -94,22 +88,19 @@
           placeholder="Datum do"
           bind:value={currentTemplate.fields[3].value}
           on:input={() => {
-            //console.log(currentTemplate.fields[0].value);
             reloadQRcode();
           }}
         />
       </p>
     {:else}
       <p>
-        Student jménem <strong
-          >{prepareFormField(currentTemplate.fields[0])}</strong
-        >
+        Student jménem {@html prepareFormField(currentTemplate.fields[0])}
         studuje na škole
-        <strong>{prepareFormField(currentTemplate.fields[1])}</strong>
+        {@html prepareFormField(currentTemplate.fields[1])}
         od
-        <strong>{prepareFormField(currentTemplate.fields[2])}</strong>
+        {@html prepareFormField(currentTemplate.fields[2])}
         do
-        <strong>{prepareFormField(currentTemplate.fields[3])}</strong>
+        {@html prepareFormField(currentTemplate.fields[3])}
       </p>
     {/if}
     <div class="qr-code" id="qr-code">

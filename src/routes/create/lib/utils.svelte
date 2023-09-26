@@ -41,10 +41,29 @@
     }
   };
 
-  export const prepareFormField = (field) => {
+  const sanitize = (string) => {
+    const map = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#x27;",
+      "/": "&#x2F;",
+    };
+    const reg = /[&<>"'/]/gi;
+    return string.replace(reg, (match) => map[match]);
+  };
+
+  export const prepareFormField = (field, decodeUri = false) => {
     console.log(field);
+
+    if (decodeUri) {
+      field.value = decodeURI(field.value);
+    }
     try {
-      return field.value != "" ? field.value : `[${field.name}]`;
+      return field.value != ""
+        ? `<strong>${sanitize(field.value)}</strong>`
+        : `<strong>[${field.name}]</strong>`;
     } catch (error) {
       console.log(error);
       return "";

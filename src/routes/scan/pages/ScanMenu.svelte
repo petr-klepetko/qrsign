@@ -1,5 +1,5 @@
 <script context="module">
-  import { onMount } from "svelte";
+  import { onMount, setContext } from "svelte";
   import Device from "svelte-device-info";
 </script>
 
@@ -12,10 +12,7 @@
   import TopContent from "../lib/TopContent.svelte";
   import BottomContent from "../lib/BottomContent.svelte";
   import {
-    sayHello,
-    html5QrCodeSetup,
     getDevices,
-    // liveScanOnSuccess,
     liveScanOnError,
     options,
     stopLiveScan,
@@ -70,8 +67,6 @@
   };
 
   onMount(async () => {
-    // sayHello();
-    // return;
     html5QrCode = new Html5Qrcode(/* element id */ "reader");
 
     const devices = await getDevices();
@@ -132,7 +127,9 @@
     {fileinput}
     {scannerIsLoaded}
     {refreshScanning}
-    on:read={() => dispatch("read")}
+    on:read={() => {
+      dispatch("read");
+    }}
     bind:this={BottomContentElement}
   />
 {/key}
@@ -144,7 +141,6 @@
     accept=".jpg, .jpeg, .png, .heic"
     on:change={(e) => {
       onFileSelected(e);
-      // console.log("on change fired");
     }}
     bind:this={fileinput}
   />

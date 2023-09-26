@@ -99,9 +99,9 @@ cpj0RVyD8LlBze13cQQn7EhFzofz2IZPZowLN61b4jbr+HsSIRaZr4mXX9tho41g
 
   /**
    * Async function for signing a message
-   * @param {*} privateKey
-   * @param {*} message
-   * @param {*} format
+   * @param {key} privateKey
+   * @param {string} message
+   * @param {string} format
    */
   const signMessage = async (privateKey, message, format = "array") => {
     /** Encode the message */
