@@ -3,17 +3,20 @@
   import Center from "$lib/Center.svelte";
   import Spacer from "$lib/Spacer.svelte";
 
-  export let user = {};
+  let user = {};
   export let test;
 
   /** @type {import('./$types').PageData} */
   export let data;
 
+  // console.log(user);
+
   $: {
-    user = user;
-    console.log("USer: ", user);
-    console.log("test: ", test);
-    console.log("data: ", data);
+    data = data;
+    console.log("data.user.anonymous: ", data.user.anonymous);
+    // console.log("USer: ", user);
+    // console.log("test: ", test);
+    // console.log("data: ", data);
   }
 </script>
 
@@ -27,7 +30,8 @@
   <a href="/scan">
     <Button>Scan</Button>
   </a>
-  {#if typeof data.user.name !== "undefined"}
+  <!-- {#if typeof data.user.name !== "undefined"} -->
+  {#if !data.user.anonymous}
     <div id="textOr">or</div>
 
     <a href="/create"><Button>Create</Button></a>

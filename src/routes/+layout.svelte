@@ -1,15 +1,15 @@
 <script>
+  import { getContext } from "svelte";
+  import { setContext } from "svelte";
   import { Modals, closeModal } from "svelte-modals";
   import BackArrow from "$lib/BackArrow.svelte";
-  import Center from "$lib/Center.svelte";
-  import { onMount } from "svelte";
-  import axios from "axios";
 
-  import {
-    PUBLIC_BE_URL as BE_URL,
-    PUBLIC_BE_PORT as BE_PORT,
-    PUBLIC_USER_FROM_COOKIE_ENDPOINT as USER_FROM_COOKIE_ENDPOINT,
-  } from "$env/static/public";
+  import { openModal } from "svelte-modals";
+  import UserModal from "$lib/UserModal.svelte";
+
+  import { page } from "$app/stores";
+
+  import { writable } from "svelte/store";
 
   /** Page history */
   let pageHistory = [];
@@ -26,38 +26,26 @@
     }
   };
 
-  let user = {};
-  let userInitials = "";
+  export let data;
+  console.log("data (+layout.svelte): ", data);
 
-  onMount(async () => {
-    await refreshUser();
-  });
+  const user = data?.user;
+  user.initials = user?.name?.split(" ")[0][0] + user?.name?.split(" ")[1][0];
+  console.log("user (+layout.svelte): ", user);
 
-  const refreshUser = async () => {
-    try {
-      const options = {
-        method: "GET",
-        // url: `http://localhost:8079/${entityEndpoint}/${uuid}`,
-        url: `${BE_URL}:${BE_PORT}${USER_FROM_COOKIE_ENDPOINT}`,
-        withCredentials: true,
-      };
-      const response = await axios.request(options);
-      user = response.data;
-
-      userInitials = user.name.split(" ")[0][0] + user.name.split(" ")[1][0];
-    } catch (error) {
-      console.log("error: ", error);
-      userInitials = null;
-    }
-  };
+  const userStored = writable();
 
   $: {
-    try {
-      user = user;
-      userInitials = user.name.split(" ")[0][0] + user.name.split(" ")[1][0];
-      // console.log(user);
-    } catch (error) {}
+    userStored.set(data?.user);
   }
+
+  setContext("userStored", userStored);
+
+  const openUserModal = () => {
+    console.log("ahoj");
+    console.log(user);
+    openModal(UserModal, { user });
+  };
 </script>
 
 <div id="page-container">
@@ -71,9 +59,11 @@
       </a>
     </div>
     <div class="right-header">
-      {#if userInitials}
-        <div id="user-info">{userInitials ?? ""}</div>
-      {:else if userInitials === null}
+      {#if !user?.anonymous}
+        <div on:click={openUserModal} id="user-info">
+          {user.initials ?? "XX"}
+        </div>
+      {:else}
         <a href="/login">Login</a>
       {/if}
     </div>
@@ -86,10 +76,9 @@
           class="backdrop"
           on:click={closeModal}
           on:keypress={closeModal}
-          {user}
-        />
-      </Modals>
-      <slot {user} test="123" />
+        /></Modals
+      >
+      <slot />
     </div>
   </div>
   <footer>2023, Petr Klepetko, VŠE</footer>
@@ -175,6 +164,11 @@
 
   #user-info {
     max-width: 100%;
+  }
+
+  #user-info:hover {
+    background-color: rgba(0, 0, 0, 0.091);
+    cursor: pointer;
   }
 
   @media print {

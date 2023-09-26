@@ -25,6 +25,9 @@
   let qrCodeValue;
   let avatar, fileinput;
 
+  export let data;
+  console.log("Data: ", data);
+
   // const onFileSelected = (e) => {
   //   let image = e.target.files[0];
   //   let reader = new FileReader();

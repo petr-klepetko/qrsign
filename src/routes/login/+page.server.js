@@ -6,7 +6,7 @@ import {
   PUBLIC_USER_FROM_COOKIE_ENDPOINT as USER_FROM_COOKIE_ENDPOINT,
 } from "$env/static/public";
 
-const getUserFromCookies = async () => {
+const refreshUser = async () => {
   try {
     const options = {
       method: "GET",
@@ -15,17 +15,28 @@ const getUserFromCookies = async () => {
       withCredentials: true,
     };
     const response = await axios.request(options);
-    return response.data;
+    user = response.data;
 
-    // userInitials = user.name.split(" ")[0][0] + user.name.split(" ")[1][0];
+    console.log(user);
+
+    console.log("Jsem tu");
+    return user;
+    //   userInitials = user.name.split(" ")[0][0] + user.name.split(" ")[1][0];
   } catch (error) {
     console.log("error: ", error);
     // userInitials = null;
+    return {
+      anonymous: true,
+    };
   }
 };
 
-/** @type {import('./$types').PageLoad} */
+// export const load = async ({ params }) => {
+//   const user = await refreshUser();
+//   return { user };
+// };
+
 export async function load({ params }) {
-  const user = await getUserFromCookies();
+  const user = await refreshUser();
   return { user };
 }

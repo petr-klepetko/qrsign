@@ -15,18 +15,33 @@ const refreshUser = async () => {
       withCredentials: true,
     };
     const response = await axios.request(options);
-    user = response.data;
+    let user = response.data;
+    console.log("user (+layout.js): ", user);
 
     return user;
     //   userInitials = user.name.split(" ")[0][0] + user.name.split(" ")[1][0];
   } catch (error) {
     console.log("error: ", error);
     // userInitials = null;
-    return {};
+    let user = {
+      email: null,
+      name: null,
+      uuid: null,
+      anonymous: true,
+    };
+    console.log("user: ", user);
+    return {
+      user,
+    };
   }
 };
 
-export const load = async ({ params }) => {
+// export const load = async ({ params }) => {
+//   const user = await refreshUser();
+//   return { user };
+// };
+
+export async function load({ params }) {
   const user = await refreshUser();
   return { user };
-};
+}
