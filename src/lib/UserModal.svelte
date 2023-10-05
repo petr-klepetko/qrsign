@@ -14,8 +14,8 @@
   export let isOpen;
 
   export let user;
-  export let title;
-  export let message;
+  // export let title;
+  // export let message;
   console.log(user);
 
   const logout = async () => {
@@ -76,11 +76,6 @@
   h2 {
     text-align: center;
     font-size: 24px;
-  }
-
-  p {
-    text-align: center;
-    margin-top: 16px;
   }
 
   .actions {

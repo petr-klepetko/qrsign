@@ -79,6 +79,7 @@
     const uuid =
       typeof previousSignatureUUID === "" ? "" : previousSignatureUUID;
     // console.log("uuid: ", uuid);
+    console.log("previousSignatureUUID: ", previousSignatureUUID);
     const options = {
       method: "POST",
       // url: `http://localhost:8079/crypto/sign-message/${uuid}`,

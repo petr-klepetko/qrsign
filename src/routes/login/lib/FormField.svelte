@@ -1,7 +1,7 @@
 <script>
   export let label = "";
   export let name = "";
-  export let inputType = "text";
+  // export let inputType = "text";
   export let valueToBind = "";
 </script>
 

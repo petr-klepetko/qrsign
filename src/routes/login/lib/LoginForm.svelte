@@ -16,7 +16,7 @@
   import { createEventDispatcher } from "svelte";
   import { browser } from "$app/environment";
 
-  export let user;
+  // export let user;
 
   let email = "klepetkope3@gmail.com";
   let password = "Heslo";

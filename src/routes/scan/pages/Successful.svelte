@@ -132,7 +132,14 @@
         do
         {@html prepareFormField(currentTemplate.fields[3], true)}
       </p>
-      <div on:click={reloadQRcode} class="qr-code" id="qr-code">
+      <div
+        on:keydown={() => {
+          null;
+        }}
+        on:click={reloadQRcode}
+        class="qr-code"
+        id="qr-code"
+      >
         <QRCode codeValue={"ahoj"} squareSize="420" />
       </div>
     </div>
@@ -160,13 +167,6 @@
 {/if}
 
 <style>
-  .doc-preview {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 800px;
-    border: solid 1px black;
-  }
   .form-container {
     width: 100%;
     display: flex;
@@ -199,8 +199,6 @@
 
   * {
     font-size: 15px;
-  }
-  .sender-info {
   }
 
   #public-key {
