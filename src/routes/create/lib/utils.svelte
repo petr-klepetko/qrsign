@@ -97,7 +97,13 @@
       response = await axios.request(options);
       // console.log("response.data: ", response.data.signatureUUID);
     } catch (error) {
-      console.error(error);
+      if (error?.response?.data?.message === "No user ID") {
+        //TODO redirect na login
+        console.log("You have to login");
+        //TODO hláška
+      } else {
+        console.error(error);
+      }
     }
 
     if (!response) {
@@ -124,7 +130,8 @@
     //   "b64"
     // );
     // finalQRCodeValue.signature = "f5c3e1e7-3a8d-49cd-a935-602e111dd5cd";
-    finalQRCodeValue.author = "036ee0a2-807c-4d71-aca0-55a5edfab8a2";
+    // finalQRCodeValue.author = "036ee0a2-807c-4d71-aca0-55a5edfab8a2";
+    const previousSignatureUUID = finalQRCodeValue.signature;
     finalQRCodeValue.signature = "";
 
     console.log(
@@ -134,7 +141,7 @@
 
     finalQRCodeValue.signature = await getSignatureUUID(
       JSON.stringify(finalQRCodeValue),
-      finalQRCodeValue.signature
+      previousSignatureUUID
     );
 
     // console.log("finalQRCodeValue.signature: ", finalQRCodeValue.signature);

@@ -16,8 +16,6 @@
   import { createEventDispatcher } from "svelte";
   import { browser } from "$app/environment";
 
-  // export let user;
-
   let email = "klepetkope3@gmail.com";
   let password = "Heslo";
 
@@ -53,8 +51,6 @@
         responseError = "";
       }
 
-      // user = user;
-      // goto("/");
       if (browser) {
         // to prevent error window is not defined, because it's SSR
         window.location.href = "/";
@@ -74,7 +70,7 @@
   </div>
   <div class="form-field">
     <label for="password">Password</label>
-    <input id="password" bind:value={password} />
+    <input id="password" type="password" bind:value={password} />
   </div>
   {#if responseError}
     <p class="error-message">{responseError}</p>

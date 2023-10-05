@@ -15,6 +15,11 @@
     prepareFormField,
   } from "./lib/utils.svelte";
 
+  import { getContext } from "svelte";
+
+  let user = getContext("userStored");
+  // console.log("user (Form.svelte): ", JSON.stringify($user));
+
   let debug = false;
   let editMode = true;
 
@@ -22,7 +27,7 @@
     templateId: 1,
     fields: [],
     signature: "",
-    author: "",
+    author: $user.uuid,
   };
 
   const reloadQRcode = async () => {
@@ -39,6 +44,8 @@
   };
 
   let currentTemplate = templates[0];
+
+  currentTemplate.author = user;
 
   let formData = currentTemplate.fields.forEach((field) => {
     return field.value;

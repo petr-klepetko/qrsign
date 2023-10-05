@@ -15,8 +15,8 @@ const refreshUser = async () => {
       withCredentials: true,
     };
     const response = await axios.request(options);
-    user = response.data;
 
+    const user = response.data;
     console.log(user);
 
     console.log("Jsem tu");

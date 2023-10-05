@@ -31,6 +31,7 @@
   const user = data?.user;
   user.initials = user?.name?.split(" ")[0][0] + user?.name?.split(" ")[1][0];
   console.log("user (+layout.svelte): ", user);
+  console.log("user.initials: ", user.initials);
 
   const userStored = writable();
   $: {
