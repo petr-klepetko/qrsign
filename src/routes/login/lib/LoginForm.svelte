@@ -1,9 +1,6 @@
 <script>
   import Button from "../../../lib/Button.svelte";
-  import Form from "./Form.svelte";
-  import FormField from "./FormField.svelte";
   import Spacer from "$lib/Spacer.svelte";
-  import { construct_svelte_component } from "svelte/internal";
   import axios from "axios";
   import {
     PUBLIC_BE_URL as BE_URL,
@@ -11,9 +8,6 @@
     PUBLIC_LOGIN_ENDPOINT as LOGIN_ENDPOINT,
   } from "$env/static/public";
 
-  import { redirect } from "@sveltejs/kit";
-  import { goto } from "$app/navigation";
-  import { createEventDispatcher } from "svelte";
   import { browser } from "$app/environment";
 
   let email = "klepetkope3@gmail.com";

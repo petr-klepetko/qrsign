@@ -87,12 +87,14 @@
     margin: 0;
     padding: 0;
     font-family: "Courier New", Courier, monospace;
-    height: fit-content;
+    height: 100vh;
+    width: 100vw;
     overflow-x: hidden;
   }
   #page-container {
     position: relative;
     min-height: 100vh;
+    min-width: 100vw;
   }
   h1 {
     /* margin: 10px 40px; */
@@ -153,7 +155,6 @@
     height: 100%;
     width: 100%;
     overflow: scroll;
-    padding: 15px;
   }
   a {
     text-decoration: none;
