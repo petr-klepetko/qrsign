@@ -6,14 +6,12 @@
 
   import QRCode, { qrcode } from "$lib/QRJS.svelte";
 
-  import { signingUtility } from "./SigningUtility.svelte";
-
   import {
     padString,
     templates,
     updateFinalQRValue,
     prepareFormField,
-  } from "./lib/utils.svelte";
+  } from "./utils.svelte";
 
   import { getContext } from "svelte";
 
@@ -32,7 +30,6 @@
 
   const reloadQRcode = async () => {
     finalQRCodeValue = await updateFinalQRValue(
-      signingUtility,
       finalQRCodeValue,
       currentTemplate
     );
@@ -52,10 +49,6 @@
   });
 
   let currentData = currentTemplate.fields.map((field) => field.value);
-
-  onMount(async () => {
-    await signingUtility.init();
-  });
 </script>
 
 <!-- {currentTemplate.fields[0].value} -->

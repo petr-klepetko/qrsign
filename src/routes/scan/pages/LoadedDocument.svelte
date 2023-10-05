@@ -10,7 +10,6 @@
   import {
     padString,
     templates,
-    updateFinalQRValue,
     prepareFormField,
   } from "../../create/lib/utils.svelte";
 
@@ -23,7 +22,6 @@
   import Modal from "../../../lib/Modal.svelte";
 
   let qrCodeObject = JSON.parse(qrCodeValue);
-  console.log("qrCodeObject.fields[0]: ", qrCodeObject.fields[0]);
 
   let authorUUID = qrCodeObject.author;
 
@@ -32,10 +30,6 @@
   for (let i = 0; i < currentTemplate.fields.length; i++) {
     currentTemplate.fields[i].value = qrCodeObject.fields[i];
   }
-
-  let formData = "";
-
-  console.log(JSON.stringify(authorUUID));
 
   let sender = {
     name: "Sender name",
@@ -81,10 +75,6 @@
     console.log("qrCode: ", padString(JSON.stringify(qrCodeObject)));
     console.log("result: ", result);
 
-    //   formData = qrCodeObject.fields.forEach((field) => {
-    //   return field.value;
-    // });
-
     if (!sender) {
       console.log("Couldn't fetch the author");
       return;
@@ -118,8 +108,6 @@
     <p>Verification was {success ? "successful" : "unsuccessful"}!</p>
     <p>Check your document below:</p>
   </div>
-  <!-- <div class="doc-preview">Your document will be there.</div> -->
-  <!-- <div class="doc-preview"> -->
   <div class="form-container">
     <div class="form">
       <h3>{currentTemplate.header}</h3>

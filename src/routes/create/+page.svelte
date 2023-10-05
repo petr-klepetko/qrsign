@@ -1,5 +1,5 @@
 <script context="module">
-  import Form from "./Form.svelte";
+  import Form from "./lib/Form.svelte";
   // TODO getting template from DB and passing it to the DB
 </script>
 

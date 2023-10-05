@@ -5,7 +5,7 @@
   import { writable } from "svelte/store";
   export let data;
 
-  // console.log(data);
+  console.log(data);
   $: {
     data = data;
   }

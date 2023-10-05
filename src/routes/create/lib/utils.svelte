@@ -74,15 +74,10 @@
     qrCodeValue,
     previousSignatureUUID
   ) => {
-    // console.log("previousSignature: ", previousSignatureUUID);
-    // console.log('previousSignatureUUID === "": ', previousSignatureUUID === "");
     const uuid =
       typeof previousSignatureUUID === "" ? "" : previousSignatureUUID;
-    // console.log("uuid: ", uuid);
-    console.log("previousSignatureUUID: ", previousSignatureUUID);
     const options = {
       method: "POST",
-      // url: `http://localhost:8079/crypto/sign-message/${uuid}`,
       url: `${BE_URL}:${BE_PORT}${SIGN_MESSAGE_ENPOINT}/${uuid}`,
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
@@ -93,9 +88,9 @@
     };
 
     let response = false;
+
     try {
       response = await axios.request(options);
-      // console.log("response.data: ", response.data.signatureUUID);
     } catch (error) {
       if (error?.response?.data?.message === "No user ID") {
         //TODO redirect na login
@@ -113,24 +108,15 @@
   };
 
   export const updateFinalQRValue = async (
-    signingUtility,
     finalQRCodeValue,
     currentTemplate
   ) => {
     /** Create an array of just the values and encode special characters as if for a URL */
 
-    // finalQRCodeValue.signature = "";
     finalQRCodeValue.fields = currentTemplate.fields.map((field) =>
       encodeURI(field.value)
     );
 
-    // finalQRCodeValue.signature = await signingUtility.sign(
-    //   signingUtility.keys.private,
-    //   JSON.stringify(finalQRCodeValue.fields),
-    //   "b64"
-    // );
-    // finalQRCodeValue.signature = "f5c3e1e7-3a8d-49cd-a935-602e111dd5cd";
-    // finalQRCodeValue.author = "036ee0a2-807c-4d71-aca0-55a5edfab8a2";
     const previousSignatureUUID = finalQRCodeValue.signature;
     finalQRCodeValue.signature = "";
 
@@ -143,10 +129,6 @@
       JSON.stringify(finalQRCodeValue),
       previousSignatureUUID
     );
-
-    // console.log("finalQRCodeValue.signature: ", finalQRCodeValue.signature);
-
-    /** Pad to certain number because of the character counting error in the library*/
 
     return finalQRCodeValue;
   };
