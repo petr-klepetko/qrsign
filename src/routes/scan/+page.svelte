@@ -5,7 +5,6 @@
 
 <script>
   import ScanMenu from "./pages/ScanMenu.svelte";
-  import ScanMenuMobile from "./pages/ScanMenuMobile.svelte";
   import BackArrow from "$lib/BackArrow.svelte";
   import LoadedDocument from "./pages/LoadedDocument.svelte";
   import { getContext } from "svelte";

@@ -1,5 +1,5 @@
 <script context="module">
-  import { onMount, setContext } from "svelte";
+  import { onDestroy, onMount, setContext } from "svelte";
 </script>
 
 <script>
@@ -108,6 +108,15 @@
       scanCompleted = false;
       setUpLiveScan(html5QrCode, devices);
     };
+  });
+
+  onDestroy(async () => {
+    console.log("Teď jsem to destroynnul");
+    try {
+      const response = await stopLiveScan(html5QrCode);
+    } catch (error) {
+      console.log("error: ", error);
+    }
   });
 </script>
 

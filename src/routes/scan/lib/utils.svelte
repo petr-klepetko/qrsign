@@ -25,7 +25,7 @@
   };
 
   export const liveScanOnError = (errorMessage) => {
-    // console.log("I tried, but saw no code. ");
+    console.log("I tried, but saw no code. ");
   };
 
   export const getDevices = async () => {
