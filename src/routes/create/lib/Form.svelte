@@ -6,14 +6,17 @@
 
   import QRCode, { qrcode } from "$lib/QRJS.svelte";
 
-  import { signingUtility } from "./SigningUtility.svelte";
-
   import {
     padString,
     templates,
     updateFinalQRValue,
     prepareFormField,
-  } from "./lib/utils.svelte";
+  } from "./utils.svelte";
+
+  import { getContext } from "svelte";
+
+  let user = getContext("userStored");
+  // console.log("user (Form.svelte): ", JSON.stringify($user));
 
   let debug = false;
   let editMode = true;
@@ -22,12 +25,11 @@
     templateId: 1,
     fields: [],
     signature: "",
-    author: "",
+    author: $user.uuid,
   };
 
   const reloadQRcode = async () => {
     finalQRCodeValue = await updateFinalQRValue(
-      signingUtility,
       finalQRCodeValue,
       currentTemplate
     );
@@ -40,15 +42,13 @@
 
   let currentTemplate = templates[0];
 
+  currentTemplate.author = user;
+
   let formData = currentTemplate.fields.forEach((field) => {
     return field.value;
   });
 
   let currentData = currentTemplate.fields.map((field) => field.value);
-
-  onMount(async () => {
-    await signingUtility.init();
-  });
 </script>
 
 <!-- {currentTemplate.fields[0].value} -->

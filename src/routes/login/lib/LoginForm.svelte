@@ -1,9 +1,6 @@
 <script>
   import Button from "../../../lib/Button.svelte";
-  import Form from "./Form.svelte";
-  import FormField from "./FormField.svelte";
   import Spacer from "$lib/Spacer.svelte";
-  import { construct_svelte_component } from "svelte/internal";
   import axios from "axios";
   import {
     PUBLIC_BE_URL as BE_URL,
@@ -11,12 +8,7 @@
     PUBLIC_LOGIN_ENDPOINT as LOGIN_ENDPOINT,
   } from "$env/static/public";
 
-  import { redirect } from "@sveltejs/kit";
-  import { goto } from "$app/navigation";
-  import { createEventDispatcher } from "svelte";
   import { browser } from "$app/environment";
-
-  export let user;
 
   let email = "klepetkope3@gmail.com";
   let password = "Heslo";
@@ -53,8 +45,6 @@
         responseError = "";
       }
 
-      // user = user;
-      // goto("/");
       if (browser) {
         // to prevent error window is not defined, because it's SSR
         window.location.href = "/";
@@ -74,7 +64,7 @@
   </div>
   <div class="form-field">
     <label for="password">Password</label>
-    <input id="password" bind:value={password} />
+    <input id="password" type="password" bind:value={password} />
   </div>
   {#if responseError}
     <p class="error-message">{responseError}</p>

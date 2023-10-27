@@ -1,6 +1,5 @@
 <script context="module">
   export let qrcode;
-  // import QRCode from "./";
 </script>
 
 <script>
@@ -11,12 +10,21 @@
 
   squareSize = 1000;
 
+  const drawQRcode = () => {
+    qrcode = new QRCode("qrcode", {
+      text: codeValue,
+      width: squareSize,
+      height: squareSize,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.M,
+    });
+  };
+
   onMount(() => {
     let script = document.createElement("script");
-    // script.src =
-    //   "https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js";
-    script.type = "text/javascript";
-    script.src = "/qrcode.min.js";
+    script.src =
+      "https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js";
     document.head.append(script);
 
     let availableParentWidth =

@@ -1,6 +1,5 @@
 <script context="module">
-  import { onMount, setContext } from "svelte";
-  import Device from "svelte-device-info";
+  import { onDestroy, onMount, setContext } from "svelte";
 </script>
 
 <script>
@@ -20,23 +19,21 @@
   import Modal from "$lib/Modal.svelte";
   import { openModal } from "svelte-modals";
 
+  export let qrCodeValue;
+
   const dispatch = createEventDispatcher();
 
   let readerElement;
   let fileinput;
   let BottomContentElement;
   let unique = {};
-
   let html5QrCode;
-
   let uploadedImage;
-  export let qrCodeValue;
 
   let scanCompleted = false;
   let scannerIsLoaded = false;
 
   let onFileSelected = () => null;
-
   let refreshScanning = () => null;
 
   const liveScanOnSuccess = async (decodedText, html5QrCode) => {
@@ -111,6 +108,15 @@
       scanCompleted = false;
       setUpLiveScan(html5QrCode, devices);
     };
+  });
+
+  onDestroy(async () => {
+    console.log("Teď jsem to destroynnul");
+    try {
+      const response = await stopLiveScan(html5QrCode);
+    } catch (error) {
+      console.log("error: ", error);
+    }
   });
 </script>
 

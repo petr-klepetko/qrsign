@@ -1,7 +1,7 @@
 <script>
   import { getContext } from "svelte";
   const user = getContext("userStored");
-  console.log("userStored (create/+layout.svelte)", $user);
+  // console.log("userStored (create/+layout.svelte)", $user);
 </script>
 
 {#if !user}

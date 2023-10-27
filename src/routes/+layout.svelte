@@ -6,8 +6,6 @@
   import { openModal } from "svelte-modals";
   import UserModal from "$lib/UserModal.svelte";
 
-  import { page } from "$app/stores";
-
   import { writable } from "svelte/store";
 
   /** Page history */
@@ -26,11 +24,12 @@
   };
 
   export let data;
-  console.log("data (+layout.svelte): ", data);
-
   const user = data?.user;
   user.initials = user?.name?.split(" ")[0][0] + user?.name?.split(" ")[1][0];
-  console.log("user (+layout.svelte): ", user);
+
+  // console.log("data (+layout.svelte): ", data);
+  // console.log("user (+layout.svelte): ", user);
+  // console.log("user.initials: ", user.initials);
 
   const userStored = writable();
   $: {
@@ -88,12 +87,14 @@
     margin: 0;
     padding: 0;
     font-family: "Courier New", Courier, monospace;
-    height: fit-content;
+    height: 100vh;
+    width: 100vw;
     overflow-x: hidden;
   }
   #page-container {
     position: relative;
     min-height: 100vh;
+    min-width: 100vw;
   }
   h1 {
     /* margin: 10px 40px; */
@@ -154,7 +155,6 @@
     height: 100%;
     width: 100%;
     overflow: scroll;
-    padding: 15px;
   }
   a {
     text-decoration: none;

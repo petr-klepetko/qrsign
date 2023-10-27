@@ -86,7 +86,12 @@
     margin: 0 0 10px 0;
   }
   .qrcode-value {
+    margin-left: 10px;
     max-width: 100%;
     overflow-x: scroll;
+  }
+
+  pre {
+    margin-left: 10px;
   }
 </style>

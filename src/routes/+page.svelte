@@ -5,7 +5,6 @@
   import { getContext } from "svelte";
 
   const user = getContext("userStored");
-  console.log("userStored (+page.svelte)", $user);
 </script>
 
 <header>
